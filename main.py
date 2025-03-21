@@ -1,15 +1,29 @@
-# This is a sample Python script.
+from openai import OpenAI
+import os
+from dotenv import load_dotenv
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+load_dotenv()
+openai_api_key = os.environ.get("OPEN_AI_KEY")
 
+client = OpenAI(api_key=openai_api_key)
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[{
+        "role": "user",
+        "content": [
+            {"type": "text", "text": "What's in this image?"},
+            {
+                "type": "image_url",
+                "image_url": {
+                    "url": "https://transform.octanecdn.com/fit/1600x900/https://octanecdn.com/colorvisionprintingcom/colorvisionprintingcom_370928206.png",
+                    "detail": "low"
+                },
+            },
+        ],
+    }],
+)
 
+print(response.choices[0].message.content)
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
+print(response)
