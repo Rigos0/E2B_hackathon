@@ -26,7 +26,7 @@ class OpenAIModel:
 
         # Register available functions
         self.available_tools = {
-            "execute_python": ExecutePythonFunction(),
+            "execute_python": ExecutePythonFunction(robot),
             "move": MoveFunction(robot),
             "speak": SpeakFunction(robot)
         }
@@ -99,7 +99,7 @@ class OpenAIModel:
                     time.sleep(arguments["duration"])
                 elif tool_name == "speak" and "text" in arguments:
                     words = len(arguments["text"].split())
-                    sleep_time = max(1, words // 2)  # At least 1 second
+                    sleep_time = words
                     time.sleep(sleep_time)
 
         return tool_call_responses

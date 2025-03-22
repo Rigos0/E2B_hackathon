@@ -12,6 +12,9 @@ class ExecutePythonFunction(BaseFunction):
     Function to execute Python code in a sandbox.
     """
 
+    def __init__(self, robot):
+        self.robot = robot
+
     function_schema = {
         "type": "function",
         "function": {
@@ -34,6 +37,7 @@ class ExecutePythonFunction(BaseFunction):
 
     def execute(self, code: str):
         code = code.replace("\\n", "\n")
+        self.robot.beep()
 
         print(f"Executing the code: {code}")
         with Sandbox() as sandbox:

@@ -39,6 +39,7 @@ class RobotController:
         """
         try:
             self.socket.sendall(command.encode())
+            time.sleep(0.1)
             return f"Sent command: {command}"
         except Exception as e:
             return f"Error sending command: {str(e)}"
@@ -93,6 +94,16 @@ class RobotController:
 
         self.send_command_async(f"playsound {flag}")
         return "Playing sound in background."
+
+    def beep(self) -> str:
+        """
+        BEEP
+
+        Returns:
+            Confirmation message.
+        """
+        self.send_command(f"beep")
+        return "Beep."
 
     @staticmethod
     def clean_response(response: str) -> str:

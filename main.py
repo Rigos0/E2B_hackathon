@@ -104,7 +104,9 @@ for i in range(5):
             "content": [
                 {
                     "type": "text",
-                    "text": "Turn left then right then left and go forward.",
+                    "text": "Look for a written problem to solve. If you find it, solve it using execute_python tool."
+                            "If you don't see a problem to solve, explore the area using the move tool and make a very short comment on what you see"
+                            "using the speak tool ",
                 },
             ],
         },
