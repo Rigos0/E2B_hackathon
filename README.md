@@ -1,4 +1,4 @@
-# Agentic Wall-E - giving gpt a body
+# Agentic Wall-E - Giving GPT a Body
 
 ![image](https://github.com/user-attachments/assets/d2d93d66-ec0d-48c6-8572-cafaac8e61cb)
 
