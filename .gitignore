@@ -187,3 +187,4 @@ fabric.properties
 
 # Project-specific
 snapshots
+tests.ipynb
