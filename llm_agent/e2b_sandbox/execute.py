@@ -49,32 +49,44 @@ import random
 
 class GenerateRandomNumberFunction(BaseFunction):
     """
-    Function to generate a random number between 1 and 100.
+    Function to generate a random number between 1 and a specified upper bound.
     """
 
     function_schema = {
         "type": "function",
         "function": {
             "name": "generate_random_number",
-            "description": "Generates a random number between 1 and 100.",
+            "description": "Generates a random number between 1 and a specified upper bound.",
             "parameters": {
                 "type": "object",
-                "properties": {},
-                "required": [],
+                "properties": {
+                    "upper_bound": {
+                        "type": "integer",
+                        "description": "The upper bound for the random number (inclusive)."
+                    }
+                },
+                "required": ["upper_bound"],
                 "additionalProperties": False
             },
             "strict": True
         }
     }
 
-    def execute(self):
+    def execute(self, upper_bound: int):
         """
-        Generates and returns a random number between 1 and 100.
-        """
-        result = random.randint(1, 100)
-        print(f"Generated random number: {result}")
-        return str(result)
+        Generates and returns a random number between 1 and the specified upper bound.
 
+        Args:
+            upper_bound (int): The upper bound for the random number (inclusive).
+
+        Returns:
+            str: A random number between 1 and upper_bound, as a string.
+        """
+        # Convert to int in case it comes in as a string
+        upper_bound = int(upper_bound)
+        result = random.randint(1, upper_bound)
+        print(f"Generated random number between 1 and {upper_bound}: {result}")
+        return str(result)
 
 if __name__ == "__main__":
     execute_python = ExecutePythonFunction()

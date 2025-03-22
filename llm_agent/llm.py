@@ -60,7 +60,7 @@ class OpenAIModel:
             # Re-run the conversation with updated messages
             return self.complete(messages)
 
-        return response, messages
+        return response_message.content, messages
 
     def _handle_tool_calls(self, tool_calls):
         """
