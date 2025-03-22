@@ -188,3 +188,4 @@ fabric.properties
 # Project-specific
 snapshots
 tests.ipynb
+droidcam_test.py
