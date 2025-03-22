@@ -45,9 +45,9 @@ class OpenAIModel:
 
         response_message = response.choices[0].message
 
-        print("Initial response: ")
-        print(response_message)
-        print("\n")
+        # print("Initial response: ")
+        # print(response_message)
+        # print("\n")
 
         # Append the assistant's response to maintain conversation history
         messages.append({

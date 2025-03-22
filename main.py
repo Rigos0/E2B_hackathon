@@ -40,6 +40,35 @@ class MemoryManager:
         if len(self.iterations) > steps:
             self.iterations = self.iterations[-steps:]
 
+    def print_memory(self):
+        """Prints stored memory with formatting and base64 filtering."""
+        print("\n\n\n")
+        for i, iteration in enumerate(self.iterations):
+            print(f"Iteration {i + 1} Messages:")
+            for m in iteration:
+                content_to_print = m.get('content', '')
+                if isinstance(content_to_print, list):
+                    filtered_content = []
+                    for item in content_to_print:
+                        if item.get('type') == 'image_url' and 'image_url' in item:
+                            url = item['image_url']['url']
+                            if 'base64' in url:
+                                base64_start = url.find('base64,')
+                                if base64_start != -1:
+                                    item = {
+                                        'type': 'image_url',
+                                        'image_url': {
+                                            'url': url[:base64_start + 7] + ' <BASE64_DATA_HIDDEN>',
+                                            'detail': item['image_url'].get('detail', 'low')
+                                        }
+                                    }
+                        filtered_content.append(item)
+                    content_to_print = filtered_content
+
+                message_to_print = m.copy()
+                message_to_print['content'] = content_to_print
+                print(message_to_print)
+
 
 def get_front_camera_image_message(droidcam_object):
     """Captures an image from the front camera and returns it as a message."""
@@ -75,7 +104,7 @@ for i in range(5):
             "content": [
                 {
                     "type": "text",
-                    "text": "Say something using the robot speakers. Then, move forwards for three seconds",
+                    "text": "Turn left then right then left and go forward.",
                 },
             ],
         },
@@ -87,38 +116,7 @@ for i in range(5):
     # Step 3: Store the full step in memory
     memory.add_iteration(messages)
 
-    print("\n\n\n")
-    print(f"Iteration {i + 1} Messages: ")
-    for m in messages:
-        if 'content' in m and isinstance(m['content'], list):
-            # Handle the case where content is a list (e.g., with text and image_url)
-            filtered_content = []
-            for item in m['content']:
-                if item.get('type') == 'image_url' and 'image_url' in item:
-                    # Replace base64 data with a placeholder
-                    url = item['image_url']['url']
-                    if 'base64' in url:
-                        # Find where the base64 data starts
-                        base64_start = url.find('base64,')
-                        if base64_start != -1:
-                            # Replace the base64 data with a placeholder
-                            item = {
-                                'type': 'image_url',
-                                'image_url': {
-                                    'url': url[:base64_start + 7] + ' <BASE64_DATA_HIDDEN>',
-                                    'detail': item['image_url'].get('detail', 'low')
-                                }
-                            }
-                filtered_content.append(item)
-            content_to_print = filtered_content
-        else:
-            content_to_print = m.get('content', '')
-
-        # Create a copy of the message with the filtered content
-        message_to_print = m.copy()
-        message_to_print['content'] = content_to_print
-
-        print(message_to_print)
+    memory.print_memory()
 
     print(f"\n\nModel response: {response}")
 

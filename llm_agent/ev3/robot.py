@@ -32,15 +32,30 @@ class RobotController:
         Sends a command to the robot over the persistent connection.
 
         Args:
-            command: The command to send (e.g., "forward", "backward", "left", "right", "say: Hello").
+            command: The command to send (e.g., "forward 2", "backward 3", "left", "right", "say: Hello world").
 
         Returns:
             Confirmation message or error if connection fails.
         """
         try:
             self.socket.sendall(command.encode())
-            time.sleep(0.1)
-            return f"Sent command: {command}"
+            print(f"Sent command: {command}")
+
+            # Extract sleep duration
+            parts = command.split()
+            if parts[0] in ["forward", "backward", "left", "right"] and len(parts) > 1:
+                try:
+                    sleep_time = int(parts[1])
+                except ValueError:
+                    sleep_time = 0
+            elif parts[0] == "say:" and len(parts) > 1:
+                sleep_time = max(1, len(parts[1:]) // 2)  # At least 1 second
+            else:
+                sleep_time = 0
+
+            time.sleep(sleep_time)
+            print(f"Command executed: {command} (Slept for {sleep_time} seconds)")
+            return f"Command executed: {command} (Slept for {sleep_time} seconds)"
         except Exception as e:
             return f"Error sending command: {str(e)}"
 
