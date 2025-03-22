@@ -94,5 +94,13 @@ class OpenAIModel:
                     "content": tool_response
                 })
 
+                # Extract sleep duration
+                if tool_name == "move" and "duration" in arguments:
+                    time.sleep(arguments["duration"])
+                elif tool_name == "speak" and "text" in arguments:
+                    words = len(arguments["text"].split())
+                    sleep_time = max(1, words // 2)  # At least 1 second
+                    time.sleep(sleep_time)
+
         return tool_call_responses
 
