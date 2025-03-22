@@ -1,6 +1,13 @@
 from droidcam.core import *
 from llm_agent.llm import *
+
 import time
+
+
+llm = OpenAIModel()
+droidcam = DroidCamHandler(ip_address="10.113.131.127:4747",
+                           log_level=LogLevel.SNAPSHOT)
+time.sleep(1)
 
 
 class MemoryManager:
@@ -57,29 +64,21 @@ def get_front_camera_image_message(droidcam_object):
     }
 
 
-llm = OpenAIModel()
-
-droidcam = DroidCamHandler(ip_address="10.113.131.127:4747",
-                           log_level=LogLevel.SNAPSHOT)
-time.sleep(1)
-
-
 memory = MemoryManager()
 
 # Run multiple iterations
 for i in range(5):
-    # Step 1: Create new iteration messages
     new_iteration_messages = [
+        get_front_camera_image_message(droidcam_object=droidcam),
         {
             "role": "user",
             "content": [
                 {
                     "type": "text",
-                    "text": "Describe what is on the camera. Read the text. If there is a task, solve it.",
+                    "text": "Say something using the robot speakers. Then, move forwards for three seconds",
                 },
             ],
         },
-        get_front_camera_image_message(droidcam_object=droidcam)
     ]
 
     # Step 2: Pass stored memory + new iteration messages to LLM

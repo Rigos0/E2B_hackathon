@@ -4,7 +4,12 @@ from dotenv import load_dotenv
 from typing import Dict, List, Tuple
 
 from .e2b_sandbox.execute import ExecutePythonFunction, GenerateRandomNumberFunction
+from .ev3.robot import *
 import json
+
+load_dotenv()
+EV3_IP_ADDRESS = os.environ.get("EV3_IP_ADDRESS")
+robot = RobotController(ip=EV3_IP_ADDRESS)
 
 
 class OpenAIModel:
@@ -22,7 +27,8 @@ class OpenAIModel:
         # Register available functions
         self.available_tools = {
             "execute_python": ExecutePythonFunction(),
-            "generate_random_number": GenerateRandomNumberFunction()
+            "move": MoveFunction(robot),
+            "speak": SpeakFunction(robot)
         }
 
     def complete(self, messages: list):
