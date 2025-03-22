@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from typing import Dict, List, Tuple
 
-from .e2b_sandbox.execute import ExecutePythonFunction
+from .e2b_sandbox.execute import ExecutePythonFunction, GenerateRandomNumberFunction
 import json
 
 
@@ -21,10 +21,15 @@ class OpenAIModel:
 
         # Register available functions
         self.available_tools = {
-            "execute_python": ExecutePythonFunction()
+            "execute_python": ExecutePythonFunction(),
+            "generate_random_number": GenerateRandomNumberFunction()
         }
 
     def complete(self, messages: list):
+        """
+        Sends a conversation to the OpenAI API and processes responses,
+        including tool calls when required.
+        """
         response = self.client.chat.completions.create(
             model=self.model,
             messages=messages,
@@ -38,37 +43,50 @@ class OpenAIModel:
         print(response_message)
         print("\n")
 
-        # Append the model's response to messages to maintain conversation flow
+        # Append the assistant's response to maintain conversation history
         messages.append({
             "role": "assistant",
             "content": response_message.content,
             "tool_calls": response_message.tool_calls
         })
 
-        # If the model requests a tool execution
+        # Process any tool calls requested by the model
         if response_message.tool_calls:
-            tool_call_responses = []  # Store tool responses
+            tool_responses = self._handle_tool_calls(response_message.tool_calls)
 
-            for tool_call in response_message.tool_calls:
-                tool_name = tool_call.function.name
-                arguments = json.loads(tool_call.function.arguments)
-
-                if tool_name in self.available_tools:
-                    tool_response = self.available_tools[tool_name].execute(**arguments)
-
-                    # Store tool response
-                    tool_call_responses.append({
-                        "role": "tool",
-                        "tool_call_id": tool_call.id,  # Ensure it matches the requested tool call
-                        "name": tool_name,
-                        "content": tool_response
-                    })
-
-            # Append tool response(s) to messages
-            messages.extend(tool_call_responses)
+            # Append tool responses to messages
+            messages.extend(tool_responses)
 
             # Re-run the conversation with updated messages
             return self.complete(messages)
 
         return response, messages
+
+    def _handle_tool_calls(self, tool_calls):
+        """
+        Handles execution of tool calls requested by the model.
+
+        Args:
+            tool_calls (list): List of tool calls requested by the model.
+
+        Returns:
+            list: List of responses from the executed tools.
+        """
+        tool_call_responses = []
+
+        for tool_call in tool_calls:
+            tool_name = tool_call.function.name
+            arguments = json.loads(tool_call.function.arguments)
+
+            if tool_name in self.available_tools:
+                tool_response = self.available_tools[tool_name].execute(**arguments)
+
+                tool_call_responses.append({
+                    "role": "tool",
+                    "tool_call_id": tool_call.id,
+                    "name": tool_name,
+                    "content": tool_response
+                })
+
+        return tool_call_responses
 

@@ -38,7 +38,7 @@ messages = [
                     "content": [
                         {
                             "type": "text",
-                            "text": "Try executing python code to find what the factorial of 16!",
+                            "text": "Try executing python code to find what the factorial of 16! Also, use the generate random number tool and give me also the random number.",
                         },
                     ],
                 }
