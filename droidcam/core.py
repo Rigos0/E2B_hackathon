@@ -176,7 +176,7 @@ def encode_image_pil(image):
 
 
 if __name__ == "__main__":
-    droidcam_ip = "10.0.1.18:4747"
+    droidcam_ip = DROIDCAM_IP
 
     # Initialize the camera
     print(f"Connecting to DroidCam at {droidcam_ip}...")
