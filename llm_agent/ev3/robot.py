@@ -197,5 +197,5 @@ class MoveFunction(BaseFunction):
 
 
 if __name__ == "__main__":
-    robot = RobotController("169.254.110.214")
+    robot = RobotController(ROBOT_IP)
     robot.speak("hello world")
