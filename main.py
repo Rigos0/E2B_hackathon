@@ -5,7 +5,7 @@ import time
 
 
 llm = OpenAIModel()
-droidcam = DroidCamHandler(ip_address="10.113.131.127:4747",
+droidcam = DroidCamHandler(ip_address=DROIDCAM_IP,
                            log_level=LogLevel.SNAPSHOT)
 time.sleep(1)
 
